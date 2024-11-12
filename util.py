@@ -13,9 +13,9 @@ from nltk.tokenize import word_tokenize
 
 import sys
 import os
-if os.path.isdir('/var/karen'):
-    os.environ['TRANSFORMERS_CACHE'] = '/var/karen/workspace/Refinement-Generation/cache'
-    sys.path.insert(0, '/var/karen/workspace/Refinement-Generation/')
+if os.path.isdir('/home/jt'):
+    os.environ['TRANSFORMERS_CACHE'] = '/home/jt/zmy/COLD-Attack/cache'
+    sys.path.insert(0, '/home/jt/zmy/COLD-Attack/')
 
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from tqdm import tqdm

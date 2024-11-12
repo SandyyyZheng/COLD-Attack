@@ -8,6 +8,8 @@ import wandb
 import argparse
 import random
 import sys
+# import nltk
+# nltk.download('punkt')
 sys.path.insert(0, './GPT2ForwardBackward')
 
 from nltk.corpus import stopwords
@@ -99,8 +101,8 @@ def seed_everything(seed):
 def main():
     args = options()
     device = "cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu"
-    model_path_dicts = {"Llama-2-7b-chat-hf": "meta-llama/Llama-2-7b-chat-hf",
-                        "Vicuna-7b-v1.5": "lmsys/vicuna-7b-v1.5",
+    model_path_dicts = {"Llama-2-7b-chat-hf": "../models/Llama-2-7b-chat-hf",
+                        "Vicuna-7b-v1.5": "../models/Vicuna-7b-v1.5",
                         "guanaco-7b": "TheBloke/guanaco-7B-HF",
                         "mistral-7b": "mistralai/Mistral-7B-Instruct-v0.2", 
                         }

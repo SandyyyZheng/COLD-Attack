@@ -71,4 +71,13 @@ def attack_generation(model, tokenizer, device, args, model_back=None):
             results["prompt"] = [line.strip() for line in prompts] 
             results["prompt_with_adv"] = prompts_with_adv           
             results["output"] = outputs                            
-            results["adv"] = text_complete_candidates                                               
+            results["adv"] = text_complete_candidates    
+            results_file = os.path.join(fw, f'suffix_{args.start}_{args.end}.csv')
+            if os.path.exists(results_file):
+                existing_results = pd.read_csv(results_file)
+                combined_results = pd.concat([existing_results, results], ignore_index=True)
+            else:
+                combined_results = results
+
+            combined_results.to_csv(results_file, index=False)
+            print(f'Results saved to {results_file}')                                         

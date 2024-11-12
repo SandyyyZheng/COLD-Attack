@@ -74,4 +74,5 @@ def attack_generation(model, tokenizer, device, args, model_back=None):
             results["prompt"] = [line.strip() for line in prompts]  
             results["prompt_with_adv"] = prompts_with_adv           
             results["output"] = outputs                       
-            results["adv"] = text_complete_candidates                              
+            results["adv"] = text_complete_candidates    
+            results.to_csv(f"outputs/{args.pretrained_model}/control_{args.start}_{args.end}.csv", index=False)                            

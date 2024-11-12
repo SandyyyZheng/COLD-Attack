@@ -11,6 +11,7 @@ from util import *
 import re
 from opt_util import *
 from evaluation.ensemble_scorer import Scorer
+from collections import defaultdict
 def post_process(string):
     string = string.strip(" ")
     string = string.strip(".")
@@ -94,9 +95,9 @@ def clean_answer(o):
     
 def merge_csv(args):
     folder_path = f"outputs/{args.pretrained_model}"
-    if osp.exists(f"outputs/{args.pretrained_model}/{args.start}_{args.end}.csv"):
+    if osp.exists(f"outputs/{args.pretrained_model}/control_{args.start}_{args.end}.csv"):
         # result = pd.read_csv(f"outputs/{args.pretrained_model}/{args.start}_{args.end}.csv")
-        file_names = [f"{args.start}_{args.end}.csv"]
+        file_names = [f"control_{args.start}_{args.end}.csv"]
         sorted_file_names = file_names
     else:
         file_names = [file for file in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, file))]
@@ -116,14 +117,14 @@ def merge_csv(args):
 def run(args):
     # Load the model and tokenizer
 
-    model_name = "lmsys/vicuna-7b-v1.5"
+    model_name = "../models/Vicuna-7b-v1.5"
     gpt_model, gpt_tokenizer = load_model_and_tokenizer(model_name,
                                                 low_cpu_mem_usage=True,
                                                 use_cache=False,
                                                 device="cuda")
 
     
-    data = pd.read_csv("./data/advbench/harmful_behaviors.csv")
+    data = pd.read_csv("./data/advbench/harmful_behaviors_custom.csv")
 
     goals = data['goal'].tolist()[args.start:args.end+1]
     
@@ -137,7 +138,7 @@ def run(args):
 
     # results.to_csv(f"outputs/{args.pretrained_model}/{args.start}_{args.end}_chosen.csv")
 
-    results = pd.read_csv(f"outputs/{args.pretrained_model}/{args.start}_{args.end}.csv")
+    results = pd.read_csv(f"outputs/{args.pretrained_model}/control_{args.start}_{args.end}.csv")
 
     if args.defense_method == "none":
         ppls_adv = []
@@ -197,6 +198,7 @@ if __name__ == "__main__":
     parser.add_argument("--pretrained-model", type=str, default="llama2")
     parser.add_argument("--start", type=int, default=1, help="loading data from ith examples.")
     parser.add_argument("--end", type=int, default=10, help="loading data util ith examples.")
+    parser.add_argument("--defense-method", type=str, default="none", help="choose a defense method")
     args = parser.parse_args()
     run(args)
     

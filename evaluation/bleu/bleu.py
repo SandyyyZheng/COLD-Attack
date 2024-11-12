@@ -20,6 +20,8 @@ class Bleu:
 
     def compute_score(self, gts, res):
 
+        print("Ground Truth Keys:", gts.keys())
+        print("Reference Keys:", res.keys())
         assert(gts.keys() == res.keys())
         imgIds = gts.keys()
 
