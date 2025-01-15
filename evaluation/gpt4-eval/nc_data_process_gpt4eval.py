@@ -4,6 +4,7 @@ import logging
 import os
 import argparse
 import pandas as pd
+import chardet
 
 
 '''
@@ -79,7 +80,10 @@ def main(folder_path):
             processed_data_complete = []
 
             try:
-                df = pd.read_csv(input_path)
+                with open(input_path, 'rb') as f:
+                    result = chardet.detect(f.read())
+                encoding = result['encoding']
+                df = pd.read_csv(input_path, encoding=encoding)
                 for index, row in df.iterrows():
                     prompt = row['prompt']
                     output = row['output']
@@ -100,7 +104,7 @@ def main(folder_path):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process JSON files in a folder.')
     parser.add_argument('--folder', required=True, help='Path to the folder containing JSON files.')
-    parser.add_argument('--pretrained-model', default="llama", help='Path to the folder containing JSON files.')
+    parser.add_argument('--pretrained-model', default="vicuna", help='Path to the folder containing JSON files.')
     args = parser.parse_args()
 
     main(args.folder)

@@ -95,7 +95,7 @@ def clean_answer(o):
     
 def merge_csv(args):
     folder_path = f"outputs/{args.pretrained_model}"
-    if osp.exists(f"outputs/{args.pretrained_model}/control_{args.start}_{args.end}.csv"):
+    if osp.exists(f"outputs/{args.pretrained_model}/suffix_{args.start}_{args.end}.csv"):
         # result = pd.read_csv(f"outputs/{args.pretrained_model}/{args.start}_{args.end}.csv")
         file_names = [f"control_{args.start}_{args.end}.csv"]
         sorted_file_names = file_names
@@ -107,7 +107,7 @@ def merge_csv(args):
     # 逐个读取文件并拼接数据
     for file_name in sorted_file_names:
         file_path = os.path.join(folder_path, file_name)  # 替换为你的文件所在目录路径
-        df = pd.read_csv(file_path)
+        df = pd.read_csv(file_path, encoding='utf-8', errors='ignore')
         merged_data = pd.concat([merged_data, df], ignore_index=True)
 
     merged_data.drop('Unnamed: 0', axis=1, inplace=True)
@@ -117,7 +117,7 @@ def merge_csv(args):
 def run(args):
     # Load the model and tokenizer
 
-    model_name = "../models/Vicuna-7b-v1.5"
+    model_name = "/root/autodl-tmp/models/Vicuna-7b-v1.5"
     gpt_model, gpt_tokenizer = load_model_and_tokenizer(model_name,
                                                 low_cpu_mem_usage=True,
                                                 use_cache=False,
@@ -138,7 +138,7 @@ def run(args):
 
     # results.to_csv(f"outputs/{args.pretrained_model}/{args.start}_{args.end}_chosen.csv")
 
-    results = pd.read_csv(f"outputs/{args.pretrained_model}/control_{args.start}_{args.end}.csv")
+    results = pd.read_csv(f"outputs/{args.pretrained_model}/suffix_{args.start}_{args.end}.csv")
 
     if args.defense_method == "none":
         ppls_adv = []
@@ -195,7 +195,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Collect all attack results for a given model"
     )
-    parser.add_argument("--pretrained-model", type=str, default="llama2")
+    parser.add_argument("--pretrained-model", type=str, default="vicuna")
     parser.add_argument("--start", type=int, default=1, help="loading data from ith examples.")
     parser.add_argument("--end", type=int, default=10, help="loading data util ith examples.")
     parser.add_argument("--defense-method", type=str, default="none", help="choose a defense method")
